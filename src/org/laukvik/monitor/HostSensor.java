@@ -8,11 +8,12 @@ package org.laukvik.monitor;
  *
  * @author morten
  */
-public class HostSensor implements Sensor{
+public class HostSensor extends AbstractSensor {
 
-    public HostSensor(){
+    public HostSensor() {
+        super();
     }
-    
+
     @Override
     public void run() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -37,5 +38,5 @@ public class HostSensor implements Sensor{
     public Object getValue() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }
