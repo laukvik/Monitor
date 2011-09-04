@@ -10,6 +10,6 @@ package org.laukvik.monitor;
  */
 public interface SensorListener {
  
-    public void statusChanged( Sensor sensor, int fromStatus, int toStatus );
+    public void statusChanged( SensorEvent evt );
     
 }
