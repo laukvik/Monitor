@@ -12,9 +12,11 @@ import java.util.Stack;
  */
 public abstract class AbstractSensor implements SensorEnabled{
 
+    Sensor sensor;
     Stack<SensorListener> listeners;
     
-    public AbstractSensor(){
+    public AbstractSensor( Sensor sensor ){
+        this.sensor = sensor;
         this.listeners = new Stack<SensorListener>();
     }
     

@@ -4,6 +4,7 @@
  */
 package org.laukvik.monitor;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,6 +27,14 @@ public class SensorManager {
         emf.createEntityManager();
         assert emf != null;  //Make sure injection went through correctly.
         em = emf.createEntityManager();
+    }
+    
+    public List<SensorEnabled> listSensorEnabled( SensorGroup sensorGroup ){
+        List<SensorEnabled> items = new ArrayList<SensorEnabled>();
+        for (Sensor s: listSensors(sensorGroup)){
+            items.add( new HostSensor(s) );
+        }
+        return items;
     }
     
     public List<Sensor> listSensors( SensorGroup sensorGroup ){   
@@ -64,11 +73,15 @@ public class SensorManager {
 
         for (SensorGroup g : sm.listGroups()){
             System.out.println( "Group: " + g.getTitle() );
-            for (Sensor s : sm.listSensors(g)){
+            
+            for (Sensor s : g.getSensorCollection()){
                 System.out.println( "\tSensor: " + s.getTitle() );
-                s.setDescription( "Endret innhold fra kode" );
-                sm.save( s );
             }
+//            for (Sensor s : sm.listSensors(g)){
+//                System.out.println( "\tSensor: " + s.getTitle() );
+//                s.setDescription( "Endret innhold fra kode" );
+//                sm.save( s );
+//            }
         }
         
     

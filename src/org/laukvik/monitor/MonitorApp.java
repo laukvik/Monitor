@@ -10,16 +10,48 @@
  */
 package org.laukvik.monitor;
 
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.util.List;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
 /**
  *
  * @author morten
  */
 public class MonitorApp extends javax.swing.JFrame {
 
+    List<SensorGroup>groups;
+    SensorTable table;
+
+    
     /** Creates new form MonitorApp */
     public MonitorApp() {
         initComponents();
+        setSize( 400, 400 );
+        SensorManager sm = new SensorManager();
+        groups = sm.listGroups();
+
+        table = new SensorTable();
+        setLayout( new BorderLayout() );
+        add( new JScrollPane( table ) );
+        table.setGroup( groups.get( 0 ) );
+        pack();
+        setVisible( true );
     }
+
+//    @Override
+//    public void paint(Graphics g) {
+//        super.paint(g);
+//        for (SensorGroup group : groups){
+//            for (Sensor s : group.getSensorCollection()){
+//                g.drawString( s.getTitle(), 50, 50);
+//            }
+//        }
+//    }
+    
+    
 
     /** This method is called from within the constructor to
      * initialize the form.

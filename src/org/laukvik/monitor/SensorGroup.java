@@ -6,6 +6,7 @@ package org.laukvik.monitor;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,7 +45,7 @@ public class SensorGroup implements Serializable {
     @Column(name = "description")
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sensorgroupid")
-    private Collection<Sensor> sensorCollection;
+    private List<Sensor> sensorCollection;
 
     public SensorGroup() {
     }
@@ -78,11 +79,11 @@ public class SensorGroup implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Sensor> getSensorCollection() {
+    public List<Sensor> getSensorCollection() {
         return sensorCollection;
     }
 
-    public void setSensorCollection(Collection<Sensor> sensorCollection) {
+    public void setSensorCollection(List<Sensor> sensorCollection) {
         this.sensorCollection = sensorCollection;
     }
 

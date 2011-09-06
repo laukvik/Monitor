@@ -4,14 +4,21 @@
  */
 package org.laukvik.monitor;
 
+import java.awt.Graphics2D;
+
 /**
  *
  * @author morten
  */
 public class HostSensor extends AbstractSensor {
 
-    public HostSensor() {
-        super();
+    public HostSensor( Sensor sensor ) {
+        super( sensor );
+    }
+
+    @Override
+    public void paint(Graphics2D g) {
+            g.drawString( sensor.getTitle(), 5, 5 );
     }
 
 
