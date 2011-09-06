@@ -18,9 +18,13 @@ public class SensorTableModel implements javax.swing.table.TableModel{
     SensorGroup group;
     List<TableModelListener> listeners;
     
-    public SensorTableModel() {
+    public SensorTableModel( SensorGroup group ) {
         listeners = new ArrayList<TableModelListener>();
-        group = new SensorGroup();
+        this.group = group;
+    }
+    
+    public SensorTableModel() {
+        this(new SensorGroup());
     }
 
     public void setGroup(SensorGroup group) {

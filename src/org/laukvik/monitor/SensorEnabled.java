@@ -13,5 +13,6 @@ import java.awt.Graphics2D;
 public interface SensorEnabled {
 
     public void paint( Graphics2D g );
+    public void run();
     
 }

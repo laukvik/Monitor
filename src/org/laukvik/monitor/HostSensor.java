@@ -21,5 +21,10 @@ public class HostSensor extends AbstractSensor {
             g.drawString( sensor.getTitle(), 5, 5 );
     }
 
+    @Override
+    public void run() {
+        
+    }
+
 
 }

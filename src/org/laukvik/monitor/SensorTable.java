@@ -17,6 +17,11 @@ public class SensorTable extends JTable{
         setModel( new SensorTableModel() );
     }
 
+    public SensorTable(SensorGroup group) {
+        super();
+        setModel( new SensorTableModel(group) );
+    }
+
     void setGroup(SensorGroup sensorGroup ) {
         ((SensorTableModel)getModel()).setGroup( sensorGroup );
     }
