@@ -10,7 +10,7 @@ import java.util.Stack;
  *
  * @author morten
  */
-public abstract class AbstractSensor implements Sensor{
+public abstract class AbstractSensor implements SensorEnabled{
 
     Stack<SensorListener> listeners;
     

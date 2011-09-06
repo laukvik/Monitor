@@ -15,10 +15,10 @@ public class SensorEvent {
     public static int WARNING = 1;
     public static int CRITICAL = 2;
 
-    Sensor sensor;
+    SensorEnabled sensor;
     int oldStatus, newStatus;
     
-    public SensorEvent( int oldStatus, int newStatus, Sensor sensor ){
+    public SensorEvent( int oldStatus, int newStatus, SensorEnabled sensor ){
         this.sensor = sensor;
         this.oldStatus = oldStatus;
         this.newStatus = newStatus;
@@ -32,7 +32,7 @@ public class SensorEvent {
         return oldStatus;
     }
 
-    public Sensor getSensor() {
+    public SensorEnabled getSensor() {
         return sensor;
     }
 

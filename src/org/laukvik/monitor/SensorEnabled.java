@@ -8,11 +8,6 @@ package org.laukvik.monitor;
  *
  * @author morten
  */
-public class HostSensor extends AbstractSensor {
-
-    public HostSensor() {
-        super();
-    }
-
-
+public interface SensorEnabled {
+    
 }
