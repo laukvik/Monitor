@@ -40,11 +40,22 @@ public class SensorManager {
     
     public void save( Sensor sensor ){
         em = emf.createEntityManager();
-
         em.getTransaction().begin();
-        //persist the person entity
+        em.merge( sensor );
+        em.getTransaction().commit();        
+    }
+    
+    public void add( Sensor sensor ){
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         em.persist( sensor );
-
+        em.getTransaction().commit();        
+    }
+    
+    public void remove( Sensor sensor ){
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.remove( sensor );
         em.getTransaction().commit();        
     }
     
