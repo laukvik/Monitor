@@ -5,7 +5,6 @@
 package org.laukvik.monitor;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -52,6 +51,10 @@ public class SensorGroup implements Serializable {
 
     public SensorGroup(Integer sensorgroupid) {
         this.sensorgroupid = sensorgroupid;
+    }
+    
+    public int indexOf( Sensor sensor ){
+        return sensorCollection.indexOf( sensor );
     }
 
     public Integer getSensorgroupid() {

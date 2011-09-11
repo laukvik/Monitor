@@ -4,6 +4,7 @@
  */
 package org.laukvik.monitor;
 
+import java.awt.Color;
 import javax.swing.JTable;
 
 /**
@@ -14,18 +15,24 @@ public class SensorTable extends JTable{
 
     public SensorTable() {
         super();
+        setDefaultRenderer( Sensor.class, new SensorTableCellRenderer() );
+        setRowHeight( 64 );
+        setBackground( new Color(53,58,63) );
+        setForeground( Color.WHITE );
         setModel( new SensorTableModel() );
     }
 
     public SensorTable(SensorGroup group) {
         super();
+        setDefaultRenderer( Sensor.class, new SensorTableCellRenderer() );
+        setRowHeight( 64 ); 
+        setBackground( new Color(53,58,63) );
+        setForeground( Color.WHITE );
         setModel( new SensorTableModel(group) );
     }
 
-    void setGroup(SensorGroup sensorGroup ) {
+    public void setGroup(SensorGroup sensorGroup ) {
         ((SensorTableModel)getModel()).setGroup( sensorGroup );
     }
- 
-    
-    
+
 }

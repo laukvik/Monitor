@@ -4,7 +4,11 @@
  */
 package org.laukvik.monitor;
 
+import java.awt.Graphics2D;
 import java.io.Serializable;
+import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,16 +57,89 @@ public class Sensor implements Serializable {
     @ManyToOne(optional = false)
     private SensorGroup sensorgroupid;
 
+    
+    /**
+     * 
+     */
+    transient private Analyzer analyzer;
+    transient private Timer timer;
+    transient private boolean isCompleted;
+    transient private Stack<SensorListener> listeners;
+    transient private Long value;
+
     public Sensor() {
+        this.listeners = new Stack<SensorListener>();
     }
 
     public Sensor(Integer sensorid) {
+        this();
         this.sensorid = sensorid;
     }
 
     public Sensor(Integer sensorid, String classname) {
+        this();
         this.sensorid = sensorid;
         this.classname = classname;
+    }
+    
+    public void paint( Graphics2D g, int width, int height ){
+        analyzer.paint( g, width, height );
+    };
+    
+    public void addSensorListener( SensorListener l ){
+        listeners.add( l );
+    }
+    
+    public void removeSensorListener( SensorListener l ){
+        listeners.remove( l );
+    }
+    
+    public void fireSensorChanged( int fromStatus, int toStatus ){
+        SensorEvent se = new SensorEvent(fromStatus,toStatus,this); 
+        for (SensorListener l : listeners){
+            l.statusChanged( se );
+        }
+    }
+    
+    public void fireValueChanged(){
+        SensorEvent se = new SensorEvent(0,0,this); 
+        for (SensorListener l : listeners){
+            l.statusChanged( se );
+        }
+    }
+    
+    private void createAnalyzer(){
+        this.analyzer = new HostAnalyzer(this);
+    }
+    
+    public void start(){
+        createAnalyzer();
+        timer = new Timer();
+        long initialDelaySeconds = 0;
+        long delaySeconds = 1;
+        isCompleted = true;
+        timer.schedule( new ScheduledTask(),  initialDelaySeconds, delaySeconds*1000 );
+    }
+    
+    public void stop(){
+        timer.cancel();
+    }
+    
+    private class ScheduledTask extends TimerTask {
+
+        @Override
+        public void run() {
+            /* Make sure that we wait until last run has finished */
+            if (isCompleted) {
+                isCompleted = false;
+
+                analyzer.run();
+
+                /* Set status to completed after running */
+                isCompleted = true;
+            }
+        }
+
     }
 
     public Integer getSensorid() {
@@ -103,6 +180,14 @@ public class Sensor implements Serializable {
 
     public void setSensorgroupid(SensorGroup sensorgroupid) {
         this.sensorgroupid = sensorgroupid;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
+    }
+
+    public Long getValue() {
+        return value;
     }
 
     @Override

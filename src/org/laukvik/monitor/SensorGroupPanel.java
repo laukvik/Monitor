@@ -20,7 +20,12 @@ public class SensorGroupPanel extends JPanel{
         super();
         setLayout( new BorderLayout() );
         table = new SensorTable( group );
+        
         add( new JScrollPane(table) );
+        
+        for (Sensor s : group.getSensorCollection()){
+            s.start();
+        }
     }
  
     

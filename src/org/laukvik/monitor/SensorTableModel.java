@@ -13,14 +13,14 @@ import javax.swing.event.TableModelListener;
  *
  * @author morten
  */
-public class SensorTableModel implements javax.swing.table.TableModel{
+public class SensorTableModel implements javax.swing.table.TableModel, SensorListener{
 
     SensorGroup group;
     List<TableModelListener> listeners;
     
     public SensorTableModel( SensorGroup group ) {
         listeners = new ArrayList<TableModelListener>();
-        this.group = group;
+        setGroup( group );
     }
     
     public SensorTableModel() {
@@ -29,6 +29,18 @@ public class SensorTableModel implements javax.swing.table.TableModel{
 
     public void setGroup(SensorGroup group) {
         this.group = group;
+        for (Sensor s : group.getSensorCollection()){
+            s.addSensorListener( this );
+        }
+    }
+    
+    @Override
+    public void statusChanged(SensorEvent evt) {
+        int tableRowIndex = group.indexOf( evt.sensor );
+        TableModelEvent tme = new TableModelEvent( this, tableRowIndex );
+        for (TableModelListener l : listeners){
+            l.tableChanged( tme );
+        }
     }
     
     public void fireTableChanged(){
@@ -45,14 +57,15 @@ public class SensorTableModel implements javax.swing.table.TableModel{
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 1;
     }
 
     @Override
     public String getColumnName(int columnIndex) {
         switch(columnIndex){
-            case 0 : return "SensorID";
-            case 1 : return "Title";
+            case 0 : return "Sensor";
+//            case 1 : return "Title";
+//            case 2 : return "Value";
             default : return null;
         }
     }
@@ -60,14 +73,15 @@ public class SensorTableModel implements javax.swing.table.TableModel{
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch(columnIndex){
-            case 0 : return Integer.class;
-            case 1 : return String.class;
+            case 0 : return Sensor.class;
+//            case 1 : return String.class;
+//            case 2 : return Long.class;
             default : return null;
         }
     }
 
     @Override
-    public boolean isCellEditable(int i, int i1) {
+    public boolean isCellEditable( int rowIndex , int columnIndex ) {
         return false;
     }
 
@@ -75,15 +89,15 @@ public class SensorTableModel implements javax.swing.table.TableModel{
     public Object getValueAt( int rowIndex , int columnIndex) {
         Sensor s = group.getSensorCollection().get( rowIndex );
         switch(columnIndex){
-            case 0 : return s.getSensorid();
-            case 1 : return s.getTitle();
+            case 0 : return s;
+//            case 1 : return s.getTitle();
             default : return null;
         }
     }
 
     @Override
     public void setValueAt(Object o, int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
     @Override

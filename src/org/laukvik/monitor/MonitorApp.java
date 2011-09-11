@@ -35,9 +35,13 @@ public class MonitorApp extends javax.swing.JFrame {
         groups = sm.listGroups();
 
         
+        
         tabbedPane = new JTabbedPane();
         for (SensorGroup group : groups){
-            tabbedPane.addTab( group.getTitle(), new SensorGroupPanel(group) );
+            for (Analyzer se : sm.listSensorEnabled(group)){
+                tabbedPane.addTab( group.getTitle(), new SensorGroupPanel(group) );
+                
+            }
         }
         
         

@@ -29,10 +29,10 @@ public class SensorManager {
         em = emf.createEntityManager();
     }
     
-    public List<SensorEnabled> listSensorEnabled( SensorGroup sensorGroup ){
-        List<SensorEnabled> items = new ArrayList<SensorEnabled>();
+    public List<Analyzer> listSensorEnabled( SensorGroup sensorGroup ){
+        List<Analyzer> items = new ArrayList<Analyzer>();
         for (Sensor s: listSensors(sensorGroup)){
-            items.add( new HostSensor(s) );
+            items.add( new HostAnalyzer(s) );
         }
         return items;
     }
