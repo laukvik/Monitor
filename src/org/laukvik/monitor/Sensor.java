@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -108,12 +110,30 @@ public class Sensor implements Serializable {
         }
     }
     
-    private void createAnalyzer(){
-        this.analyzer = new HostAnalyzer(this);
+    private void createAnalyzer() throws PluginException{
+//        this.analyzer = new HostAnalyzer(this);
+        try{
+            Class cl = Class.forName( getClassname() );
+//            System.out.println( "Sensor: Class=" + getClassname() );
+            // get the constructor  
+            java.lang.reflect.Constructor constructor = cl.getConstructor( Sensor.class  );
+//            System.out.println( "Sensor: constructor=" + constructor.getName() );
+            // create an instance     
+            Object invoker = constructor.newInstance( this );
+//            System.out.println( "Sensor: invoker=" + invoker.toString() );
+            this.analyzer = (Analyzer)invoker;
+        } catch(Exception e){
+            throw new PluginException( this );
+        }
+        
     }
     
     public void start(){
-        createAnalyzer();
+        try {
+            createAnalyzer();
+        } catch (PluginException ex) {
+            this.analyzer = new PluginExceptionAnalyzer( this );
+        }
         timer = new Timer();
         long initialDelaySeconds = 0;
         long delaySeconds = 1;
