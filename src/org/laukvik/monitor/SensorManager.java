@@ -4,6 +4,7 @@
  */
 package org.laukvik.monitor;
 
+import org.laukvik.monitor.sensor.WebSite;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -32,7 +33,7 @@ public class SensorManager {
     public List<Analyzer> listSensorEnabled( SensorGroup sensorGroup ){
         List<Analyzer> items = new ArrayList<Analyzer>();
         for (Sensor s: listSensors(sensorGroup)){
-            items.add( new HostAnalyzer(s) );
+            items.add( new WebSite(s) );
         }
         return items;
     }
