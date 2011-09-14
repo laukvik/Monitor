@@ -2,19 +2,21 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.laukvik.monitor;
+package org.laukvik.monitor.sensor;
 
 import java.awt.Graphics2D;
+import org.laukvik.monitor.Analyzer;
+import org.laukvik.monitor.Sensor;
 
 /**
  *
  * @author morten
  */
-public class HostAnalyzer implements Analyzer {
+public class WebSite implements Analyzer {
 
     Sensor sensor;
     
-    public HostAnalyzer( Sensor sensor ) {
+    public WebSite( Sensor sensor ) {
         this.sensor = sensor;
     }
 
