@@ -60,14 +60,7 @@ public class Sensor implements Serializable {
     private SensorGroup sensorgroupid;
 
     
-    /**
-     * 
-     */
-    transient private Analyzer analyzer;
-    transient private Timer timer;
-    transient private boolean isCompleted;
-    transient private Stack<SensorListener> listeners;
-    transient private Long value;
+
 
     public Sensor() {
         this.listeners = new Stack<SensorListener>();
@@ -84,6 +77,94 @@ public class Sensor implements Serializable {
         this.classname = classname;
     }
     
+
+
+    public Integer getSensorid() {
+        return sensorid;
+    }
+
+    public void setSensorid(Integer sensorid) {
+        this.sensorid = sensorid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getClassname() {
+        return classname;
+    }
+
+    public void setClassname(String classname) {
+        this.classname = classname;
+    }
+
+    public SensorGroup getSensorgroupid() {
+        return sensorgroupid;
+    }
+
+    public void setSensorgroupid(SensorGroup sensorgroupid) {
+        this.sensorgroupid = sensorgroupid;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (sensorid != null ? sensorid.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Sensor)) {
+            return false;
+        }
+        Sensor other = (Sensor) object;
+        if ((this.sensorid == null && other.sensorid != null) || (this.sensorid != null && !this.sensorid.equals(other.sensorid))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "org.laukvik.monitor.Sensor[ sensorid=" + sensorid + " ]";
+    }
+    
+    
+    
+    /**
+     * 
+     * 
+     */
+    transient private Analyzer analyzer;
+    transient private Timer timer;
+    transient private boolean isCompleted;
+    transient private Stack<SensorListener> listeners;
+    transient private Long value;
+    
+
+    public void setValue(Long value) {
+        this.value = value;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
     public void paint( Graphics2D g, int width, int height ){
         analyzer.paint( g, width, height );
     };
@@ -160,79 +241,6 @@ public class Sensor implements Serializable {
             }
         }
 
-    }
-
-    public Integer getSensorid() {
-        return sensorid;
-    }
-
-    public void setSensorid(Integer sensorid) {
-        this.sensorid = sensorid;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getClassname() {
-        return classname;
-    }
-
-    public void setClassname(String classname) {
-        this.classname = classname;
-    }
-
-    public SensorGroup getSensorgroupid() {
-        return sensorgroupid;
-    }
-
-    public void setSensorgroupid(SensorGroup sensorgroupid) {
-        this.sensorgroupid = sensorgroupid;
-    }
-
-    public void setValue(Long value) {
-        this.value = value;
-    }
-
-    public Long getValue() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (sensorid != null ? sensorid.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Sensor)) {
-            return false;
-        }
-        Sensor other = (Sensor) object;
-        if ((this.sensorid == null && other.sensorid != null) || (this.sensorid != null && !this.sensorid.equals(other.sensorid))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "org.laukvik.monitor.Sensor[ sensorid=" + sensorid + " ]";
     }
     
 }
