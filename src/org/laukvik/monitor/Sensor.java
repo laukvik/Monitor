@@ -6,12 +6,12 @@ package org.laukvik.monitor;
 
 import java.awt.Graphics2D;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,8 +21,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,33 +39,39 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Sensor.findBySensorid", query = "SELECT s FROM Sensor s WHERE s.sensorid = :sensorid"),
     @NamedQuery(name = "Sensor.findByTitle", query = "SELECT s FROM Sensor s WHERE s.title = :title"),
     @NamedQuery(name = "Sensor.findByDescription", query = "SELECT s FROM Sensor s WHERE s.description = :description"),
-    @NamedQuery(name = "Sensor.findByClassname", query = "SELECT s FROM Sensor s WHERE s.classname = :classname"),
-    @NamedQuery(name = "Sensor.findBySensorGroupid", query = "SELECT s FROM Sensor s WHERE s.sensorgroupid = :sensorgroupid")
-    }
-    )
-    
+    @NamedQuery(name = "Sensor.findBySensorGroupid", query = "SELECT s FROM Sensor s WHERE s.sensorgroupid = :sensorgroupid"),
+    @NamedQuery(name = "Sensor.findByClassname", query = "SELECT s FROM Sensor s WHERE s.classname = :classname")})
+
 public class Sensor implements Serializable {
+    @Column(name = "numbervalue")
+    private Integer numbervalue;
+
+    @Column(name = "settings", length = 2147483647)
+    private String settings;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "sensorid")
+    @Column(name = "sensorid", nullable = false)
     private Integer sensorid;
-    @Column(name = "title")
+    @Column(name = "title", length = 2147483647)
     private String title;
-    @Column(name = "description")
+    @Column(name = "description", length = 2147483647)
     private String description;
     @Basic(optional = false)
-    @Column(name = "classname")
+    @Column(name = "classname", nullable = false, length = 2147483647)
     private String classname;
-    @JoinColumn(name = "sensorgroupid", referencedColumnName = "sensorgroupid")
+    @JoinColumn(name = "sensorgroupid", referencedColumnName = "sensorgroupid", nullable = false)
     @ManyToOne(optional = false)
     private SensorGroup sensorgroupid;
-
+    @Column(name = "numberValue")
+    private Long value;
     
-
+    @Transient
+    private List<History> historyList;
 
     public Sensor() {
+        this.historyList = new Stack<History>();
         this.listeners = new Stack<SensorListener>();
     }
 
@@ -76,8 +85,6 @@ public class Sensor implements Serializable {
         this.sensorid = sensorid;
         this.classname = classname;
     }
-    
-
 
     public Integer getSensorid() {
         return sensorid;
@@ -111,6 +118,23 @@ public class Sensor implements Serializable {
         this.classname = classname;
     }
 
+    public void setValue(Long value) {
+        boolean fireChanged = true;
+        Long old = this.value;
+        if (this.value == value){
+            
+        } else {
+            this.value = value;
+        }
+        if (fireChanged){
+            fireValueChanged( old, value );
+        }
+    }
+
+    public Long getValue() {
+        return value;
+    }
+    
     public SensorGroup getSensorgroupid() {
         return sensorgroupid;
     }
@@ -143,28 +167,21 @@ public class Sensor implements Serializable {
     public String toString() {
         return "org.laukvik.monitor.Sensor[ sensorid=" + sensorid + " ]";
     }
+
+    public String getSettings() {
+        return settings;
+    }
+
+    public void setSettings(String settings) {
+        this.settings = settings;
+    }
     
     
-    
-    /**
-     * 
-     * 
-     */
     transient private Analyzer analyzer;
     transient private Timer timer;
     transient private boolean isCompleted;
     transient private Stack<SensorListener> listeners;
-    transient private Long value;
     
-
-    public void setValue(Long value) {
-        this.value = value;
-    }
-
-    public Long getValue() {
-        return value;
-    }
-
     public void paint( Graphics2D g, int width, int height ){
         analyzer.paint( g, width, height );
     };
@@ -177,15 +194,8 @@ public class Sensor implements Serializable {
         listeners.remove( l );
     }
     
-    public void fireSensorChanged( int fromStatus, int toStatus ){
-        SensorEvent se = new SensorEvent(fromStatus,toStatus,this); 
-        for (SensorListener l : listeners){
-            l.statusChanged( se );
-        }
-    }
-    
-    public void fireValueChanged(){
-        SensorEvent se = new SensorEvent(0,0,this); 
+    public void fireValueChanged( Long oldValue, Long newValue ){
+        SensorEvent se = new SensorEvent( oldValue, newValue, this ); 
         for (SensorListener l : listeners){
             l.statusChanged( se );
         }
@@ -241,6 +251,23 @@ public class Sensor implements Serializable {
             }
         }
 
+    }
+
+    public Integer getNumbervalue() {
+        return numbervalue;
+    }
+
+    public void setNumbervalue(Integer numbervalue) {
+        this.numbervalue = numbervalue;
+    }
+
+    @XmlTransient
+    public List<History> getHistoryList() {
+        return historyList;
+    }
+
+    public void setHistoryList(List<History> historyList) {
+        this.historyList = historyList;
     }
     
 }
