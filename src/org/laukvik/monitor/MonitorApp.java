@@ -21,27 +21,29 @@ import javax.swing.JTable;
  *
  * @author morten
  */
-public class MonitorApp extends javax.swing.JFrame {
+public class MonitorApp extends javax.swing.JFrame implements SensorListener {
 
     List<SensorGroup>groups;
     SensorTable table;
     JTabbedPane tabbedPane;
+    SensorService sm;
     
     /** Creates new form MonitorApp */
     public MonitorApp() {
         initComponents();
         setSize( 400, 400 );
-        SensorManager sm = new SensorManager();
+        sm = new SensorService();
         groups = sm.listGroups();
 
-        
+        for (SensorGroup g : groups){
+            for (Sensor s : g.getSensorList()){
+                s.addSensorListener( this );
+            }
+        }
         
         tabbedPane = new JTabbedPane();
         for (SensorGroup group : groups){
-            for (Analyzer se : sm.listSensorEnabled(group)){
-                tabbedPane.addTab( group.getTitle(), new SensorGroupPanel(group) );
-                
-            }
+            tabbedPane.addTab( group.getTitle(), new SensorGroupPanel(group) );
         }
         
         
@@ -52,6 +54,11 @@ public class MonitorApp extends javax.swing.JFrame {
         setVisible( true );
     }
 
+    @Override
+    public void statusChanged(SensorEvent evt) {
+        System.out.println( "SensorChagned: " + evt.sensor.getValue() );
+        sm.createHistory( evt.sensor );
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -92,4 +99,5 @@ public class MonitorApp extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+
 }
