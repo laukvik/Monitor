@@ -23,7 +23,7 @@ public class SensorGroupPanel extends JPanel{
         
         add( new JScrollPane(table) );
         
-        for (Sensor s : group.getSensorCollection()){
+        for (Sensor s : group.getSensorList()){
             s.start();
         }
     }

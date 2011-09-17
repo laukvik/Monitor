@@ -29,14 +29,14 @@ public class SensorTableModel implements javax.swing.table.TableModel, SensorLis
 
     public void setGroup(SensorGroup group) {
         this.group = group;
-        for (Sensor s : group.getSensorCollection()){
+        for (Sensor s : group.getSensorList()){
             s.addSensorListener( this );
         }
     }
     
     @Override
     public void statusChanged(SensorEvent evt) {
-        int tableRowIndex = group.indexOf( evt.sensor );
+        int tableRowIndex = group.getSensorList().indexOf( evt.sensor );
         TableModelEvent tme = new TableModelEvent( this, tableRowIndex );
         for (TableModelListener l : listeners){
             l.tableChanged( tme );
@@ -52,7 +52,7 @@ public class SensorTableModel implements javax.swing.table.TableModel, SensorLis
 
     @Override
     public int getRowCount() {
-        return group.getSensorCollection().size();
+        return group.getSensorList().size();
     }
 
     @Override
@@ -82,12 +82,13 @@ public class SensorTableModel implements javax.swing.table.TableModel, SensorLis
 
     @Override
     public boolean isCellEditable( int rowIndex , int columnIndex ) {
+        
         return false;
     }
 
     @Override
     public Object getValueAt( int rowIndex , int columnIndex) {
-        Sensor s = group.getSensorCollection().get( rowIndex );
+        Sensor s = group.getSensorList().get(rowIndex);
         switch(columnIndex){
             case 0 : return s;
 //            case 1 : return s.getTitle();

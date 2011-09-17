@@ -37,24 +37,20 @@ public class SensorGroup implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "sensorgroupid")
+    @Column(name = "sensorgroupid", nullable = false)
     private Integer sensorgroupid;
-    @Column(name = "title")
+    @Column(name = "title", length = 2147483647)
     private String title;
-    @Column(name = "description")
+    @Column(name = "description", length = 2147483647)
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sensorgroupid")
-    private List<Sensor> sensorCollection;
+    private List<Sensor> sensorList;
 
     public SensorGroup() {
     }
 
     public SensorGroup(Integer sensorgroupid) {
         this.sensorgroupid = sensorgroupid;
-    }
-    
-    public int indexOf( Sensor sensor ){
-        return sensorCollection.indexOf( sensor );
     }
 
     public Integer getSensorgroupid() {
@@ -82,12 +78,12 @@ public class SensorGroup implements Serializable {
     }
 
     @XmlTransient
-    public List<Sensor> getSensorCollection() {
-        return sensorCollection;
+    public List<Sensor> getSensorList() {
+        return sensorList;
     }
 
-    public void setSensorCollection(List<Sensor> sensorCollection) {
-        this.sensorCollection = sensorCollection;
+    public void setSensorList(List<Sensor> sensorList) {
+        this.sensorList = sensorList;
     }
 
     @Override
