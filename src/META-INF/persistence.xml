@@ -4,6 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>org.laukvik.monitor.Sensor</class>
     <class>org.laukvik.monitor.SensorGroup</class>
+    <class>org.laukvik.monitor.History</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/org.laukvik.monitor"/>
       <property name="javax.persistence.jdbc.password" value="postgres"/>
