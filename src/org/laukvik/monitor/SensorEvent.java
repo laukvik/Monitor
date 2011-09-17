@@ -16,20 +16,28 @@ public class SensorEvent {
     public static int CRITICAL = 2;
 
     Sensor sensor;
-    int oldStatus, newStatus;
+    Long oldValue, newValue;
     
-    public SensorEvent( int oldStatus, int newStatus, Sensor sensor ){
+    public SensorEvent( Long oldValue, Long newValue, Sensor sensor ){
         this.sensor = sensor;
-        this.oldStatus = oldStatus;
-        this.newStatus = newStatus;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
     }
 
-    public int getNewStatus() {
-        return newStatus;
+//    public int getNewStatus() {
+//        return newValue;
+//    }
+//
+//    public int getOldStatus() {
+//        return oldValue;
+//    }
+
+    public Long getNewValue() {
+        return newValue;
     }
 
-    public int getOldStatus() {
-        return oldStatus;
+    public Long getOldValue() {
+        return oldValue;
     }
 
     public Sensor getSensor() {
