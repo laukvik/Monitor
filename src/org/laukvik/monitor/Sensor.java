@@ -223,7 +223,7 @@ public class Sensor implements Serializable {
         try {
             createAnalyzer();
         } catch (PluginException ex) {
-            this.analyzer = new PluginExceptionAnalyzer( this );
+            this.analyzer = new EmptyAnalyzer( this );
         }
         timer = new Timer();
         long initialDelaySeconds = 0;
