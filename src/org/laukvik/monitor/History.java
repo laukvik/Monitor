@@ -32,35 +32,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "History.findAll", query = "SELECT h FROM History h"),
     @NamedQuery(name = "History.findByHistoryid", query = "SELECT h FROM History h WHERE h.historyid = :historyid"),
-    @NamedQuery(name = "History.findByCreated", query = "SELECT h FROM History h WHERE h.created = :created"),
-    @NamedQuery(name = "History.findByValue", query = "SELECT h FROM History h WHERE h.value = :value")})
+    @NamedQuery(name = "History.findBySensorid", query = "SELECT h FROM History h WHERE h.sensorid = :sensorid"),
+    @NamedQuery(name = "History.findByCreated", query = "SELECT h FROM History h WHERE h.created = :created")})
 public class History implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "historyid")
+    @Column(name = "historyid", nullable = false)
     private Integer historyid;
-    @Basic(optional = false)
-    @Column(name = "created")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-    @Column(name = "value")
-    private BigInteger value;
-    @JoinColumn(name = "sensorid", referencedColumnName = "sensorid")
+    @JoinColumn(name = "sensorid", referencedColumnName = "sensorid", nullable = false)
     @ManyToOne(optional = false)
     private Sensor sensorid;
-
-    public History() {
+    @Column(name =     "created")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+    @Column(name="numberValue")
+    private Long value;
+    
+    
+    public History() { 
     }
 
     public History(Integer historyid) {
         this.historyid = historyid;
-    }
-
-    public History(Integer historyid, Date created) {
-        this.historyid = historyid;
-        this.created = created;
     }
 
     public Integer getHistoryid() {
@@ -71,28 +67,20 @@ public class History implements Serializable {
         this.historyid = historyid;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public BigInteger getValue() {
-        return value;
-    }
-
-    public void setValue(BigInteger value) {
-        this.value = value;
-    }
-
     public Sensor getSensorid() {
         return sensorid;
     }
 
     public void setSensorid(Sensor sensorid) {
         this.sensorid = sensorid;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
     }
 
     @Override
@@ -118,6 +106,14 @@ public class History implements Serializable {
     @Override
     public String toString() {
         return "org.laukvik.monitor.History[ historyid=" + historyid + " ]";
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
     
 }
