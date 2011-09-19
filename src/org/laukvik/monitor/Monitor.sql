@@ -1,6 +1,6 @@
 
 CREATE TABLE SensorGroup(
-	sensorGroupID SERIAL,
+	sensorGroupID SERIAL NOT NULL,
 	title TEXT CHECK (title <> ''),
 	description TEXT,
 	PRIMARY KEY(sensorGroupID)
@@ -14,6 +14,7 @@ CREATE TABLE Sensor (
 	className TEXT NOT NULL CHECK(className<> ''), 
         settings TEXT,
         numberValue INT8,
+        delay INT NOT NULL,
 	PRIMARY KEY(sensorID)
 );
 
