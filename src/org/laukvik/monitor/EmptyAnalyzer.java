@@ -4,7 +4,7 @@
  */
 package org.laukvik.monitor;
 
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 
 /**
  *
@@ -19,8 +19,7 @@ public class EmptyAnalyzer implements Analyzer {
     }
 
     @Override
-    public void paint( Graphics2D g, int width, int height ) {
-        g.clearRect( 0, 0, width, height );
+    public void paint(  Graphics g, int width, int height  ) {
         g.drawString( "(Configuration error)", 64, 20 );
     }
 
