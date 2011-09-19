@@ -17,7 +17,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -25,8 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author morten
  */
 @Entity
-@Table(name = "sensorgroup")
-@XmlRootElement
+@Table(name = "SensorGroup")
 @NamedQueries({
     @NamedQuery(name = "SensorGroup.findAll", query = "SELECT s FROM SensorGroup s"),
     @NamedQuery(name = "SensorGroup.findBySensorgroupid", query = "SELECT s FROM SensorGroup s WHERE s.sensorgroupid = :sensorgroupid"),
@@ -35,29 +33,30 @@ import javax.xml.bind.annotation.XmlTransient;
 public class SensorGroup implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Basic(optional = false)
     @Column(name = "sensorgroupid", nullable = false)
-    private Integer sensorgroupid;
-    @Column(name = "title", length = 2147483647)
+    private Long sensorgroupid;
+    @Column(name = "title", length = 256)
     private String title;
-    @Column(name = "description", length = 2147483647)
+    @Basic(optional = true)
+    @Column(name = "description", length = 1024)
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sensorgroupid")
     private List<Sensor> sensorList;
 
-    public SensorGroup() {
+    public SensorGroup(){
     }
 
-    public SensorGroup(Integer sensorgroupid) {
+    public SensorGroup(Long sensorgroupid) {
         this.sensorgroupid = sensorgroupid;
     }
 
-    public Integer getSensorgroupid() {
+    public Long getSensorgroupid() {
         return sensorgroupid;
     }
 
-    public void setSensorgroupid(Integer sensorgroupid) {
+    public void setSensorgroupid(Long sensorgroupid) {
         this.sensorgroupid = sensorgroupid;
     }
 
