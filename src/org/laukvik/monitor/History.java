@@ -5,7 +5,6 @@
 package org.laukvik.monitor;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,15 +19,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author morten
  */
 @Entity
-@Table(name = "history")
-@XmlRootElement
+@Table(name = "History")
 @NamedQueries({
     @NamedQuery(name = "History.findAll", query = "SELECT h FROM History h"),
     @NamedQuery(name = "History.findByHistoryid", query = "SELECT h FROM History h WHERE h.historyid = :historyid"),
@@ -37,33 +34,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class History implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Basic(optional = false)
     @Column(name = "historyid", nullable = false)
-    private Integer historyid;
+    private Long historyid;
+    
     @JoinColumn(name = "sensorid", referencedColumnName = "sensorid", nullable = false)
     @ManyToOne(optional = false)
     private Sensor sensorid;
-    @Column(name =     "created")
+    
+    @Column(name = "created")
     @Temporal(TemporalType.TIMESTAMP)
+    @Basic(optional = false)
     private Date created;
+    
+    @Basic(optional = false)
     @Column(name="numberValue")
     private Long value;
-    
     
     public History() { 
     }
 
-    public History(Integer historyid) {
+    public History(Long historyid) {
         this.historyid = historyid;
     }
 
-    public Integer getHistoryid() {
+    public Long getHistoryid() {
         return historyid;
     }
 
-    public void setHistoryid(Integer historyid) {
+    public void setHistoryid(Long historyid) {
         this.historyid = historyid;
     }
 
