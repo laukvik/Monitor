@@ -13,12 +13,18 @@ import javax.swing.JTable;
  */
 public class SensorTable extends JTable{
 
+    public static Color BACKGROUND = new Color(53,58,63);
+    public static Color FOREGROUND = Color.WHITE;
+    
     public SensorTable() {
         super();
         setDefaultRenderer( Sensor.class, new SensorTableCellRenderer() );
         setRowHeight( 64 );
-        setBackground( new Color(53,58,63) );
-        setForeground( Color.WHITE );
+        setBackground( BACKGROUND );
+        setForeground( FOREGROUND );
+        setTableHeader( null );
+        setGridColor( BACKGROUND );
+        setBorder( null );
         setModel( new SensorTableModel() );
     }
 
@@ -26,8 +32,11 @@ public class SensorTable extends JTable{
         super();
         setDefaultRenderer( Sensor.class, new SensorTableCellRenderer() );
         setRowHeight( 64 ); 
-        setBackground( new Color(53,58,63) );
-        setForeground( Color.WHITE );
+        setBackground( BACKGROUND );
+        setForeground( FOREGROUND );
+        setTableHeader( null );
+        setGridColor( BACKGROUND );
+        setBorder( null );
         setModel( new SensorTableModel(group) );
     }
 
