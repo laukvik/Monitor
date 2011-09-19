@@ -4,7 +4,17 @@
  */
 package org.laukvik.monitor.sensor;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.laukvik.monitor.Analyzer;
 import org.laukvik.monitor.Sensor;
 
@@ -21,18 +31,66 @@ public class WebSite implements Analyzer {
     }
 
     @Override
-    public void paint( Graphics2D g, int width, int height ) {
-        g.clearRect( 0, 0, width, height );
+    public void paint(  Graphics g, int width, int height  ) {
+        if (g == null){
+            return;
+        }
+        
+        Font f = g.getFont();
+        Color c = g.getColor();
+        
+        g.setFont( new Font( f.getFontName(), Font.BOLD, 32 ) );
+        
+        
+        String formattedNumber = getFormattedNumber();
+        int formattedWidth = g.getFontMetrics().stringWidth( formattedNumber );
+        
+        g.setColor( new Color(0,0,0,50) );
+        g.drawString( formattedNumber, 30-(formattedWidth/2)+1,41 );
+        g.setColor( c );
+        g.drawString( formattedNumber, 30-(formattedWidth/2),40 );
 
+        
+        g.setColor( c );
+        g.setFont( f );
+        String formattedUnit = getUnit();
+        int unitWidth = g.getFontMetrics().stringWidth( formattedUnit );
+        g.drawString( formattedUnit, 30-(unitWidth/2),50 );
+
+        
         g.drawString( sensor.getTitle(), 64, 20 );
         
-        g.drawString( sensor.getValue() + "", 64, 40 ); 
+        g.drawString( sensor.getDescription() + "", 64, 40 ); 
     }
 
     @Override
     public void run() {
-        sensor.setValue( System.currentTimeMillis() );
-        sensor.fireValueChanged();
+        long start = System.currentTimeMillis(); 
+        try {
+            URL url = new URL( sensor.getTitle() );
+            Object s = url.getContent();
+            sensor.setValue( System.currentTimeMillis() - start );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            sensor.setValue( null );
+        }
     }
 
+    public String getFormattedNumber(){
+        if (sensor.getValue() == null){
+            return "";
+        } else if (sensor.getValue() < 100){
+            return (TimeUnit.MILLISECONDS.toMillis( sensor.getValue() )  +"");
+        } else {
+            return (TimeUnit.MILLISECONDS.toSeconds( sensor.getValue() )  +"");
+        }
+    }
+    
+    public String getUnit(){
+        if (sensor.getValue() < 100){
+            return "ms";
+        }
+        return "s";
+    }
+    
 }
