@@ -10,20 +10,51 @@
  */
 package org.laukvik.monitor;
 
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
  *
  * @author morten
  */
-public class MonitorApp extends javax.swing.JFrame implements SensorListener {
+public class MonitorApp extends javax.swing.JFrame implements SensorListener, ActionListener {
 
+    PopupMenu popupMenu;
+    SystemTray tray; 
+    TrayIcon trayIcon;
     List<SensorGroup>groups;
     SensorTable table;
     SensorService sm;
     
     /** Creates new form MonitorApp */
-    public MonitorApp() {
+    public MonitorApp(SystemTray systemTray) {
+        setTitle( "Monitor" );
+        getRootPane().putClientProperty( "apple.awt.brushMetalLook", Boolean.TRUE );
+        getRootPane().putClientProperty("Window.style", "small");
+        popupMenu = new PopupMenu();
+        popupMenu.add( new MenuItem("Display") );
+        popupMenu.addSeparator();
+        popupMenu.add( new MenuItem("Add sensor") );
+        popupMenu.add( new MenuItem("Add group") );
+        
+        popupMenu.addSeparator();
+        popupMenu.add( new MenuItem("Exit") );
+        popupMenu.addActionListener( this );
+        
+        this.tray = systemTray;
+        this.trayIcon = new TrayIcon( getIcon(), "Monitor", popupMenu );
+        try {
+            tray.add(trayIcon);
+        } catch (Exception e) {
+            System.err.println("TrayIcon could not be added.");
+        }
         initComponents();
         sm = new SensorService();
         pack();
@@ -31,6 +62,24 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener {
         setSize( 400, 400 );
         setVisible( true );
     }
+    
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println( evt.getActionCommand() );
+        if (evt.getActionCommand() == null || evt.getActionCommand().length() == 0){
+        } else if (evt.getActionCommand().equalsIgnoreCase("Exit")){
+            System.exit(0);
+        } else if (evt.getActionCommand().equalsIgnoreCase("Display")){
+            this.setVisible( true );
+        }
+    }
+
+    
+    public Image getIcon(){
+        return Toolkit.getDefaultToolkit().getImage( MonitorApp.class.getResource( "icon.png" ) );
+    }
+
     
     public void loadGroups(){
         groups = sm.listGroups();
@@ -60,13 +109,8 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener {
     private void initComponents() {
 
         sensorTabbedPane1 = new org.laukvik.monitor.SensorTabbedPane();
-        sensorToolbar1 = new org.laukvik.monitor.SensorToolbar();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(sensorTabbedPane1, java.awt.BorderLayout.CENTER);
-
-        sensorToolbar1.setRollover(true);
-        getContentPane().add(sensorToolbar1, java.awt.BorderLayout.NORTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -80,13 +124,12 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener {
 
             @Override
             public void run() {
-                new MonitorApp().setVisible(true);
+                new MonitorApp(SystemTray.getSystemTray()).setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.laukvik.monitor.SensorTabbedPane sensorTabbedPane1;
-    private org.laukvik.monitor.SensorToolbar sensorToolbar1;
     // End of variables declaration//GEN-END:variables
 
 }
