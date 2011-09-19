@@ -5,6 +5,7 @@
 package org.laukvik.monitor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -15,13 +16,19 @@ import javax.swing.JScrollPane;
 public class SensorGroupPanel extends JPanel{
 
     SensorTable table;
+    JScrollPane scroll;
     
     public SensorGroupPanel( SensorGroup group ) {
         super();
+        setBorder( null );
         setLayout( new BorderLayout() );
+        setOpaque( false );
         table = new SensorTable( group );
         
-        add( new JScrollPane(table) );
+        scroll = new JScrollPane(table);
+        scroll.setBorder( null );
+
+        add( scroll );
         
         for (Sensor s : group.getSensorList()){
             s.start();

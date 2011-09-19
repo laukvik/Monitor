@@ -14,6 +14,9 @@ public class SensorTabbedPane extends JTabbedPane{
 
     public SensorTabbedPane() {
         super();
+        setBorder( null );
+        setOpaque( false );
+        setTabPlacement( TOP );
     }
     
     
