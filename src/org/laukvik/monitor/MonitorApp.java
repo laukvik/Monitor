@@ -10,12 +10,7 @@
  */
 package org.laukvik.monitor;
 
-import java.awt.BorderLayout;
-import java.awt.Graphics;
 import java.util.List;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -25,33 +20,28 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener {
 
     List<SensorGroup>groups;
     SensorTable table;
-    JTabbedPane tabbedPane;
     SensorService sm;
     
     /** Creates new form MonitorApp */
     public MonitorApp() {
         initComponents();
-        setSize( 400, 400 );
         sm = new SensorService();
+        pack();
+        loadGroups();
+        setSize( 400, 400 );
+        setVisible( true );
+    }
+    
+    public void loadGroups(){
         groups = sm.listGroups();
-
         for (SensorGroup g : groups){
             for (Sensor s : g.getSensorList()){
                 s.addSensorListener( this );
             }
         }
-        
-        tabbedPane = new JTabbedPane();
         for (SensorGroup group : groups){
-            tabbedPane.addTab( group.getTitle(), new SensorGroupPanel(group) );
+            sensorTabbedPane1.addTab( group.getTitle(), new SensorGroupPanel(group) );
         }
-        
-        
-        
-        setLayout( new BorderLayout() );
-        add( tabbedPane );
-        pack();
-        setVisible( true );
     }
 
     @Override
@@ -69,18 +59,14 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        sensorTabbedPane1 = new org.laukvik.monitor.SensorTabbedPane();
+        sensorToolbar1 = new org.laukvik.monitor.SensorToolbar();
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().add(sensorTabbedPane1, java.awt.BorderLayout.CENTER);
+
+        sensorToolbar1.setRollover(true);
+        getContentPane().add(sensorToolbar1, java.awt.BorderLayout.NORTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -92,12 +78,15 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener {
 //        MonitorPU mpu;
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new MonitorApp().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.laukvik.monitor.SensorTabbedPane sensorTabbedPane1;
+    private org.laukvik.monitor.SensorToolbar sensorToolbar1;
     // End of variables declaration//GEN-END:variables
 
 }
