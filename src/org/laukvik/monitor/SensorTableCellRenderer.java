@@ -41,7 +41,7 @@ public class SensorTableCellRenderer extends JComponent implements TableCellRend
         g.setColor( getBackground() );
         g.fillRect( 0,0, getWidth(), getHeight() );
         
-        g.setColor( new Color(33,38,43,90) );
+        g.setColor( new Color(33,38,43,140) );
         g.fillRoundRect( 6,6, 48, 48, 10,10 );
         
         g.setColor( getForeground() );
