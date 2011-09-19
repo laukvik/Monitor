@@ -4,6 +4,8 @@
  */
 package org.laukvik.monitor;
 
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.List;
@@ -32,8 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author morten
  */
 @Entity
-@Table(name = "sensor")
-@XmlRootElement
+@Table(name = "Sensor")
 @NamedQueries({
     @NamedQuery(name = "Sensor.findAll", query = "SELECT s FROM Sensor s"),
     @NamedQuery(name = "Sensor.findBySensorid", query = "SELECT s FROM Sensor s WHERE s.sensorid = :sensorid"),
@@ -43,29 +44,34 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sensor.findByClassname", query = "SELECT s FROM Sensor s WHERE s.classname = :classname")})
 
 public class Sensor implements Serializable {
-    @Column(name = "numbervalue")
-    private Integer numbervalue;
 
-    @Column(name = "settings", length = 2147483647)
-    private String settings;
     private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Basic(optional = false)
     @Column(name = "sensorid", nullable = false)
-    private Integer sensorid;
-    @Column(name = "title", length = 2147483647)
+    private Long sensorid;
+    @Column(name = "title", length = 256)
     private String title;
-    @Column(name = "description", length = 2147483647)
+    @Basic(optional = true)
+    @Column(name = "description", length = 1024)
     private String description;
     @Basic(optional = false)
-    @Column(name = "classname", nullable = false, length = 2147483647)
+    @Column(name = "classname", nullable = false, length = 1024)
     private String classname;
     @JoinColumn(name = "sensorgroupid", referencedColumnName = "sensorgroupid", nullable = false)
     @ManyToOne(optional = false)
     private SensorGroup sensorgroupid;
+    @Basic(optional = true)
     @Column(name = "numberValue")
     private Long value;
+    @Basic(optional = true)
+    @Column(name = "settings", length = 1024)
+    private String settings;
+    
+    @Column(name="delay")
+    Long delay;
     
     @Transient
     private List<History> historyList;
@@ -75,22 +81,22 @@ public class Sensor implements Serializable {
         this.listeners = new Stack<SensorListener>();
     }
 
-    public Sensor(Integer sensorid) {
+    public Sensor(Long sensorid) {
         this();
         this.sensorid = sensorid;
     }
 
-    public Sensor(Integer sensorid, String classname) {
+    public Sensor(Long sensorid, String classname) {
         this();
         this.sensorid = sensorid;
         this.classname = classname;
     }
 
-    public Integer getSensorid() {
+    public Long getSensorid() {
         return sensorid;
     }
 
-    public void setSensorid(Integer sensorid) {
+    public void setSensorid(Long sensorid) {
         this.sensorid = sensorid;
     }
 
@@ -175,15 +181,23 @@ public class Sensor implements Serializable {
     public void setSettings(String settings) {
         this.settings = settings;
     }
-    
+
+    public Long getDelay() {
+        return delay;
+    }
+
+    public void setDelay(Long delay) {
+        this.delay = delay;
+    }
     
     transient private Analyzer analyzer;
     transient private Timer timer;
     transient private boolean isCompleted;
     transient private Stack<SensorListener> listeners;
     
-    public void paint( Graphics2D g, int width, int height ){
-        analyzer.paint( g, width, height );
+    public void paint(  Graphics g, int width, int height   ){
+//        Graphics g  = component.getGraphics();
+        analyzer.paint( g, width, height  );
     };
     
     public void addSensorListener( SensorListener l ){
@@ -227,7 +241,7 @@ public class Sensor implements Serializable {
         }
         timer = new Timer();
         long initialDelaySeconds = 0;
-        long delaySeconds = 1;
+        long delaySeconds = getDelay();
         isCompleted = true;
         timer.schedule( new ScheduledTask(),  initialDelaySeconds, delaySeconds*1000 );
     }
@@ -251,14 +265,6 @@ public class Sensor implements Serializable {
             }
         }
 
-    }
-
-    public Integer getNumbervalue() {
-        return numbervalue;
-    }
-
-    public void setNumbervalue(Integer numbervalue) {
-        this.numbervalue = numbervalue;
     }
 
     @XmlTransient
