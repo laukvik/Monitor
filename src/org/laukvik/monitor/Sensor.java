@@ -4,9 +4,7 @@
  */
 package org.laukvik.monitor;
 
-import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
@@ -26,7 +24,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -66,18 +63,16 @@ public class Sensor implements Serializable {
     @Basic(optional = true)
     @Column(name = "numberValue")
     private Long value;
-    @Basic(optional = true)
-    @Column(name = "settings", length = 1024)
-    private String settings;
-    
     @Column(name="delay")
     Long delay;
-    
+    @OneToMany(targetEntity=Setting.class, cascade = CascadeType.ALL, mappedBy = "sensorid")
+    private List<Setting> settingList;
     @Transient
     private List<History> historyList;
 
     public Sensor() {
         this.historyList = new Stack<History>();
+        this.settingList = new Stack<Setting>();
         this.listeners = new Stack<SensorListener>();
     }
 
@@ -98,6 +93,11 @@ public class Sensor implements Serializable {
 
     public void setSensorid(Long sensorid) {
         this.sensorid = sensorid;
+    }
+    
+    public void add( Setting setting ){
+        setting.setSensorID( this );
+        settingList.add(setting);
     }
 
     public String getTitle() {
@@ -174,14 +174,6 @@ public class Sensor implements Serializable {
         return "org.laukvik.monitor.Sensor[ sensorid=" + sensorid + " ]";
     }
 
-    public String getSettings() {
-        return settings;
-    }
-
-    public void setSettings(String settings) {
-        this.settings = settings;
-    }
-
     public Long getDelay() {
         return delay;
     }
@@ -254,11 +246,11 @@ public class Sensor implements Serializable {
 
         @Override
         public void run() {
-            /* Make sure that we wait until last run has finished */
+            /* Make sure that we wait until last analyze has finished */
             if (isCompleted) {
                 isCompleted = false;
 
-                analyzer.run();
+                analyzer.analyze();
 
                 /* Set status to completed after running */
                 isCompleted = true;
@@ -276,4 +268,17 @@ public class Sensor implements Serializable {
         this.historyList = historyList;
     }
     
+    public Setting getSetting( String name ){
+        for (Setting s : settingList){
+            String n = s.getName();
+            if (n == null){
+            } else if (n.equalsIgnoreCase( name )){
+                return s;
+            }
+        }
+        return null;
+    }
+    
+    
+
 }

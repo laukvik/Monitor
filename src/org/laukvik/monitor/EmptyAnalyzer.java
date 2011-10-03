@@ -24,7 +24,7 @@ public class EmptyAnalyzer implements Analyzer {
     }
 
     @Override
-    public void run() {
+    public void analyze() {
     }
 
 }

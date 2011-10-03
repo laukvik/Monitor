@@ -4,9 +4,7 @@
  */
 package org.laukvik.monitor;
 
-import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 /**
  *
@@ -15,6 +13,6 @@ import java.awt.Graphics2D;
 public interface Analyzer {
 
     public void paint( Graphics g, int width, int height );
-    public void run();
+    public void analyze();
     
 }

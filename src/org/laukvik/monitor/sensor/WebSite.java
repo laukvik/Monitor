@@ -5,16 +5,10 @@
 package org.laukvik.monitor.sensor;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.laukvik.monitor.Analyzer;
 import org.laukvik.monitor.Sensor;
 
@@ -64,10 +58,10 @@ public class WebSite implements Analyzer {
     }
 
     @Override
-    public void run() {
+    public void analyze() {
         long start = System.currentTimeMillis(); 
         try {
-            URL url = new URL( sensor.getTitle() );
+            URL url = new URL( sensor.getSetting( "url" ).getValue() );
             Object s = url.getContent();
             sensor.setValue( System.currentTimeMillis() - start );
         } catch (Exception ex) {
@@ -87,7 +81,8 @@ public class WebSite implements Analyzer {
     }
     
     public String getUnit(){
-        if (sensor.getValue() < 100){
+        if (sensor.getValue() == null){
+        } else if (sensor.getValue() < 100){
             return "ms";
         }
         return "s";

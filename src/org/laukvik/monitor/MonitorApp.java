@@ -10,6 +10,8 @@
  */
 package org.laukvik.monitor;
 
+import java.applet.AudioClip;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -21,7 +23,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
- *
+ * @todo 
+ * 
+ * 
  * @author morten
  */
 public class MonitorApp extends javax.swing.JFrame implements SensorListener, ActionListener {
@@ -33,6 +37,8 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener, Ac
     SensorTable table;
     SensorService sm;
     
+    AudioClip highAudioClip, lowAudioClip, downAudioClip;
+    
     /** Creates new form MonitorApp */
     public MonitorApp(SystemTray systemTray) {
         setTitle( "Monitor" );
@@ -40,6 +46,9 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener, Ac
         getRootPane().putClientProperty("Window.style", "small");
         popupMenu = new PopupMenu();
         popupMenu.add( new MenuItem("Display") );
+        popupMenu.addSeparator();
+        popupMenu.add( new MenuItem("Start") );
+        popupMenu.add( new MenuItem("Stop") );
         popupMenu.addSeparator();
         popupMenu.add( new MenuItem("Add sensor") );
         popupMenu.add( new MenuItem("Add group") );
@@ -63,6 +72,29 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener, Ac
         setVisible( true );
     }
     
+    public void loadAudio(){
+        try {
+            highAudioClip = java.applet.Applet.newAudioClip(org.laukvik.monitor.MonitorApp.class.getResource(""));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void start(){
+        for (SensorGroup g : groups){
+            for (Sensor s : g.getSensorList()){
+                s.start();
+            }
+        }
+    }
+    
+    public void stop(){
+        for (SensorGroup g : groups){
+            for (Sensor s : g.getSensorList()){
+                s.stop();
+            }
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
@@ -72,6 +104,10 @@ public class MonitorApp extends javax.swing.JFrame implements SensorListener, Ac
             System.exit(0);
         } else if (evt.getActionCommand().equalsIgnoreCase("Display")){
             this.setVisible( true );
+        } else if (evt.getActionCommand().equalsIgnoreCase("Start")){
+            start();
+        } else if (evt.getActionCommand().equalsIgnoreCase("Stop")){
+            stop();
         }
     }
 
